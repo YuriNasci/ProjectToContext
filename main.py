@@ -127,6 +127,10 @@ def main():
     ignore_rules = read_gitignore_rules(source_directory)
     output_filename = ".ctxt"
 
+    # Verificar se arquivo de saída já existe e apagá-lo
+    if os.path.exists(os.path.join(source_directory, output_filename)):
+        os.remove(os.path.join(source_directory, output_filename))
+
     with open(os.path.join(source_directory, output_filename), 'w', encoding='utf-8') as output_file:
         tree = generate_directory_tree(source_directory, ignore_rules=ignore_rules)
         for line in tree:
