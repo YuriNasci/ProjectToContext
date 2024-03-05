@@ -2,12 +2,15 @@ import os
 import sys
 import fnmatch
 
+GIT_DIR = '.git'
+OUTPUT_FILE = '.ctxt'
+
 """
 Checks if the given file path is a text file.
 
 Returns True if the file is a text file, False otherwise.
 """
-def is_text_file(filepath):
+def is_text_file(filepath: str) -> bool:
     """
     Verifica se o arquivo é um arquivo de texto.
     Retorna True para arquivos textuais, False para outros tipos.
@@ -16,7 +19,7 @@ def is_text_file(filepath):
         with open(filepath, 'tr') as check_file:
             check_file.read(1024)
         return True
-    except:
+    except UnicodeDecodeError:
         return False
 
 """
@@ -77,9 +80,9 @@ def generate_directory_tree(dir_path, prefix='', ignore_rules=[]):
     items = os.listdir(dir_path)
     items.sort()
     for index, item in enumerate(items):
-        if item == '.git':
+        if item == GIT_DIR:
             continue
-        
+
         path = os.path.join(dir_path, item)
         if should_ignore(path, ignore_rules):
             continue
@@ -106,7 +109,7 @@ def process_directory(directory, output_file, ignore_rules):
     for root, dirs, files in os.walk(directory, topdown=True):
         # Pular pasta .git
         if ".git" in dirs:  
-            dirs.remove(".git")
+            dirs.remove(GIT_DIR)
         
         dirs[:] = [d for d in dirs if not should_ignore(os.path.join(root, d), ignore_rules)]
         files.sort()
@@ -132,7 +135,7 @@ def main():
 
     source_directory = sys.argv[1]
     ignore_rules = read_gitignore_rules(source_directory)
-    output_filename = ".ctxt"
+    output_filename = OUTPUT_FILE
 
     # Verificar se arquivo de saída já existe e apagá-lo
     if os.path.exists(os.path.join(source_directory, output_filename)):
