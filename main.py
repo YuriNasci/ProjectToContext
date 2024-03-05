@@ -109,8 +109,8 @@ def process_directory(directory, output_file, ignore_rules):
                 continue
             if is_text_file(file_path):
                 with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
-                    output_file.write(f"\n{file_path}\n")
-                    output_file.write(file.read() + "\n")
+                    output_file.write(f"\nFile: {name}\n")
+                    output_file.write("\n" + file.read())
             else:
                 output_file.write(f"\nCaminho do Arquivo: {file_path}\n")
                 output_file.write("Formato de arquivo não é válido para conversão.\n")
@@ -133,6 +133,7 @@ def main():
 
     with open(os.path.join(source_directory, output_filename), 'w', encoding='utf-8') as output_file:
         tree = generate_directory_tree(source_directory, ignore_rules=ignore_rules)
+        output_file.write(".\n")
         for line in tree:
             output_file.write(line + "\n")
 
