@@ -77,6 +77,9 @@ def generate_directory_tree(dir_path, prefix='', ignore_rules=[]):
     items = os.listdir(dir_path)
     items.sort()
     for index, item in enumerate(items):
+        if item == '.git':
+            continue
+        
         path = os.path.join(dir_path, item)
         if should_ignore(path, ignore_rules):
             continue
@@ -101,6 +104,10 @@ def process_directory(directory, output_file, ignore_rules):
     Processa recursivamente o diretório fornecido, escrevendo detalhes no arquivo de saída, ignorando conforme .gitignore.
     """
     for root, dirs, files in os.walk(directory, topdown=True):
+        # Pular pasta .git
+        if ".git" in dirs:  
+            dirs.remove(".git")
+        
         dirs[:] = [d for d in dirs if not should_ignore(os.path.join(root, d), ignore_rules)]
         files.sort()
         for name in files:
