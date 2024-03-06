@@ -1,9 +1,10 @@
 import fnmatch
 import os
+import utils.config_loader as configurations
 
 class GitIgnoreHandler:
     def read_gitignore_rules(self, directory):
-        gitignore_path = os.path.join(directory, '.gitignore')
+        gitignore_path = os.path.join(directory, configurations.get('gitignore_filename'))
         if not os.path.exists(gitignore_path):
             return []
         

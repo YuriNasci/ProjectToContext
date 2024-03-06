@@ -1,17 +1,14 @@
 import os
 from handlers.file_handler import FileHandler
 from handlers.git_ignore_handler import GitIgnoreHandler
-
-GIT_DIR = '.git'
-OUTPUT_FILE = '.ctxt'
-GITIGNORE_FILENAME = '.gitignore'
+from utils.config_loader import configurations
 
 class DirectoryHandler:
     def generate_directory_tree(self, dir_path, prefix='', ignore_rules=[]):
         items = os.listdir(dir_path)
         items.sort()
         for index, item in enumerate(items):
-            if item == GIT_DIR or item == GITIGNORE_FILENAME:
+            if item == configurations.get('git_dir') or item == configurations.get('gitignore_filename'):
                 continue
 
             path = os.path.join(dir_path, item)
@@ -27,21 +24,22 @@ class DirectoryHandler:
     def process_directory(self, directory, output_file, ignore_rules):
         for root, dirs, files in os.walk(directory, topdown=True):
             if ".git" in dirs:  
-                dirs.remove(GIT_DIR)
+                dirs.remove(configurations.get('git_dir'))
             
             dirs[:] = [d for d in dirs if not GitIgnoreHandler().should_ignore(os.path.join(root, d), ignore_rules)]
             files.sort()
             for name in files:
-                if name == GITIGNORE_FILENAME:
+                if name == configurations.get('gitignore_filename'):
                     continue
                 
                 file_path = os.path.join(root, name)
                 if GitIgnoreHandler().should_ignore(file_path, ignore_rules):
                     continue
+                
+                output_file.write(f"\nFile: {name}\n")
                 if FileHandler().is_text_file(file_path):
                     with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
-                        output_file.write(f"\nFile: {name}\n")
+                        
                         output_file.write("\n" + file.read())
                 else:
-                    output_file.write(f"\nCaminho do Arquivo: {file_path}\n")
-                    output_file.write("Formato de arquivo não é válido para conversão.\n")
+                    output_file.write("...\n")

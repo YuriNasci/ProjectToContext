@@ -1,12 +1,12 @@
 import os
 import sys
 import fnmatch
+
+from networkx import configuration_model
 from handlers.directory_handler import DirectoryHandler
 
 from handlers.git_ignore_handler import GitIgnoreHandler
-
-OUTPUT_FILE = '.ctxt'
-
+from utils.config_loader import configurations
 def main():
     if len(sys.argv) != 2:
         print("Uso: python main.py <diretório de origem>")
@@ -14,7 +14,7 @@ def main():
 
     source_directory = sys.argv[1]
     ignore_rules = GitIgnoreHandler().read_gitignore_rules(source_directory)
-    output_filename = OUTPUT_FILE
+    output_filename = configurations.get('output_file')
 
     if os.path.exists(os.path.join(source_directory, output_filename)):
         os.remove(os.path.join(source_directory, output_filename))
