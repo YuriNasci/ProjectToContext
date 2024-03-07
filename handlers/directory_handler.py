@@ -4,6 +4,17 @@ from handlers.git_ignore_handler import GitIgnoreHandler
 from utils.config_loader import configurations
 
 class DirectoryHandler:
+    """
+    Recursively generates a directory tree structure with prefixes to show the tree hierarchy.
+    
+    Parameters:
+    - dir_path (str): The path to the directory to generate the tree for.
+    - prefix (str): The prefix string to prepend to each entry (for indentation).
+    - ignore_rules (List[str]): A list of .gitignore style patterns to ignore.
+    
+    Yields:
+    - (str): Each line of the directory tree structure with prefixes.
+    """
     def generate_directory_tree(self, dir_path, prefix='', ignore_rules=[]):
         items = os.listdir(dir_path)
         items.sort()
@@ -21,6 +32,14 @@ class DirectoryHandler:
             else:
                 yield prefix + '├── ' + item
 
+    """
+    Recursively processes all files and directories under the given directory.
+    
+    For each file, prints the filename and contents (for text files).
+    For each directory, recurses into it.
+    
+    Skips over .git directories and files matched by .gitignore rules.
+    """
     def process_directory(self, directory, output_file, ignore_rules):
         for root, dirs, files in os.walk(directory, topdown=True):
             if ".git" in dirs:  
