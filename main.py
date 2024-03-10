@@ -19,7 +19,8 @@ Empty folders are included, and files/folders that match .gitignore rules are ex
 """
 def main():
     if len(sys.argv) != 2:
-        print("Uso: python main.py <diretório de origem>")
+        print("Usage: python main.py <source directory>")
+
         sys.exit(1)
 
     source_directory = sys.argv[1]
@@ -38,7 +39,7 @@ def main():
 
         DirectoryHandler().process_directory(source_directory, output_file, ignore_rules)
 
-    print(f"Conversão concluída. Arquivo gerado: {output_filename}")
+    print("Conversion completed. File generated: {output_filename}")
 
 if __name__ == "__main__":
     main()
