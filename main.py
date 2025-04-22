@@ -39,7 +39,7 @@ def main():
 
         DirectoryHandler().process_directory(source_directory, output_file, ignore_rules)
 
-    print("Conversion completed. File generated: {output_filename}")
+    print(f"Conversion completed. File generated: {output_filename}")
 
 if __name__ == "__main__":
     main()
